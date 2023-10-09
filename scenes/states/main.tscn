@@ -1,0 +1,66 @@
+[gd_scene load_steps=8 format=3 uid="uid://f7spvbybpatm"]
+
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_50une"]
+[ext_resource type="Texture2D" uid="uid://bfhhrxat0116b" path="res://assets/graphics/mouth_closed_eye_closed.png" id="1_l7thj"]
+[ext_resource type="Texture2D" uid="uid://sa5n4ir40ynd" path="res://assets/graphics/mouth_closed_eye_open.png" id="2_j8m4f"]
+[ext_resource type="Texture2D" uid="uid://dggfixkl0n3l6" path="res://assets/graphics/mouth_open_eye_closed.png" id="3_5p0ew"]
+[ext_resource type="Texture2D" uid="uid://bm1fkpcydb4yx" path="res://assets/graphics/mouth_open_eye_open.png" id="4_iqwgy"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_vmpiv"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_l7thj")
+}],
+"loop": false,
+"name": &"mouth_closed_eye_closed",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_j8m4f")
+}],
+"loop": false,
+"name": &"mouth_closed_eye_open",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_5p0ew")
+}],
+"loop": false,
+"name": &"mouth_open_eye_closed",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_iqwgy")
+}],
+"loop": false,
+"name": &"mouth_open_eye_open",
+"speed": 5.0
+}]
+
+[sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_d5ebs"]
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_50une")
+
+[node name="Character" type="AnimatedSprite2D" parent="."]
+position = Vector2(256, 256)
+scale = Vector2(8, 8)
+sprite_frames = SubResource("SpriteFrames_vmpiv")
+animation = &"mouth_open_eye_closed"
+metadata/_edit_lock_ = true
+
+[node name="BlinkTimer" type="Timer" parent="Character"]
+wait_time = 4.0
+autostart = true
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamMicrophone_d5ebs")
+autoplay = true
+bus = &"record"
+
+[connection signal="animation_finished" from="Character" to="." method="_on_character_animation_finished"]
+[connection signal="timeout" from="Character/BlinkTimer" to="." method="_on_blink_timer_timeout"]
